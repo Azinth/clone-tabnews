@@ -1,15 +1,16 @@
-import { Client } from 'pg';
-import { config } from 'dotenv';
-config({ path: '.env.development' });
+import { Client } from "pg";
+import { config } from "dotenv";
+config({ path: ".env.development" });
 
 export async function getNewClient() {
   // Define a configuração do cliente com base no ambiente
-  const clientConfig = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'preview'
+  const clientConfig =
+    process.env.NODE_ENV === "production" || process.env.NODE_ENV === "preview"
       ? {
           connectionString: process.env.DATABASE_URL,
           ssl: {
-            rejectUnauthorized: false // Necessário para conexões SSL com Supabase
-          }
+            rejectUnauthorized: false, // Necessário para conexões SSL com Supabase
+          },
         }
       : {
           // Configuração de desenvolvimento local
@@ -27,20 +28,20 @@ export async function getNewClient() {
 }
 
 export async function query(queryObject) {
-    let client;
-    try {
-      client = await getNewClient();
-      const result = await client.query(queryObject);
-      return result;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    } finally {
-        await client.end();
-    }
+  let client;
+  try {
+    client = await getNewClient();
+    const result = await client.query(queryObject);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    await client.end();
+  }
 }
 
 export default {
-    query,
-    getNewClient
+  query,
+  getNewClient,
 };
