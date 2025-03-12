@@ -41,16 +41,9 @@ export async function query(queryObject) {
   }
 }
 
-<<<<<<< HEAD
 const database = {
   query,
   getNewClient,
 };
 
 export default database;
-=======
-export default {
-  query,
-  getNewClient,
-};
->>>>>>> 31dbbbf (fix `prettier` style linting)
