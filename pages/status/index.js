@@ -31,9 +31,7 @@ function UpdatedAt() {
 }
 
 function DatabaseVersion() {
-  const { isLoading, data } = useSWR("/api/v1/status", fetchAPI, {
-    refreshInterval: 2000,
-  });
+  const { isLoading, data } = useSWR("/api/v1/status", fetchAPI);
   let databaseVersionText = "Carregando...";
   if (!isLoading && data) {
     databaseVersionText = data.dependencies.database.version;
@@ -42,9 +40,7 @@ function DatabaseVersion() {
 }
 
 function DatabaseMaxConnections() {
-  const { isLoading, data } = useSWR("/api/v1/status", fetchAPI, {
-    refreshInterval: 2000,
-  });
+  const { isLoading, data } = useSWR("/api/v1/status", fetchAPI);
   let databaseMaxConnectionsText = "Carregando...";
   if (!isLoading && data) {
     databaseMaxConnectionsText = data.dependencies.database.max_connections;
