@@ -1,3 +1,5 @@
+import database from "infra/database.js";
+
 class ValidationError extends Error {
   constructor(message) {
     super(message);
@@ -5,7 +7,19 @@ class ValidationError extends Error {
   }
 }
 
-function salvarUsuario(input) {
+const user = {
+  async save(input) {
+    await database.query({
+      text: `
+        INSERT INTO users (name, username, age)
+        VALUES ($1, $2, $3)
+      `,
+      values: [input.name, input.username, input.age],
+    });
+  },
+};
+
+async function salvarUsuario(input) {
   if (!input) {
     throw new ReferenceError("É necessário enviar o 'input'.");
   }
@@ -21,19 +35,23 @@ function salvarUsuario(input) {
     throw new ValidationError("Preecha a idade.");
   }
 
-  user.save(input);
+  await user.save(input);
 }
 
-try {
-  salvarUsuario({});
-} catch (error) {
-  if (error instanceof ReferenceError) {
-    throw error;
+async function run() {
+  try {
+    await salvarUsuario({});
+  } catch (error) {
+    if (error instanceof ReferenceError) {
+      throw error;
+    }
+    if (error instanceof ValidationError) {
+      console.log(error.statusCode);
+    } else {
+      console.log("Erro desconhecido");
+      console.log(error.stack);
+    }
   }
-  if (error instanceof ValidationError) {
-    console.log(error.statusCode);
-    return;
-  }
-  console.log("Erro desconhecido");
-  console.log(error.stack);
 }
+
+run();
